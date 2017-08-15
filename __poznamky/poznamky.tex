@@ -1,0 +1,389 @@
+\documentclass[11pt,a4paper,titlepage,openany]{book}
+\usepackage[utf8x]{inputenc}
+\usepackage[slovak]{babel}
+
+\usepackage{fullpage}
+\usepackage{parskip}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{todonotes}
+\usepackage{titlesec}
+\usepackage{comment}
+
+\include{macros}
+
+\title{Poznámky k výuke C\# a Unity\\{\large LSTME 2017}}
+\author{Andrej Jursa}
+
+\begin{document}
+
+\maketitle
+
+\thispagestyle{empty}
+\tableofcontents
+
+\newpage
+\setcounter{page}{1}
+
+\include{kapitola_uvod}
+\include{kapitola_prostredie_a_premenne}
+
+\listoftodos
+
+\begin{comment}
+\section{Úvod}
+
+Tieto poznámky sú určené pre účastníkov Letného sústredenia talentovanej mládeže v elektronike, ako pomôcka pri výuke JavaScriptu a knižnice JQuery.
+
+\subsection{Čo je JavaScript}
+
+JavaScript je programovací jazyk, určený hľavne pre programovanie skriptov vo webových dokumentoch, ktoré spúšťa webový prehliadač na strane klienta. Vďaka JavaScript-u je teda možné vytvoriť dynamické webové dokumenty, ako napr. dynamické vstupné formuláre, tabuľky, grafy, wysiwyg editory, väčšie aplikácie (ako napr. google docs) alebo hry.
+
+JavaScript môže spolupracovať s programom na strane serveru, či už je napísaný v jazyku PHP, Ruby, Python, Java a pod. V tomto prípade interakcia prebieha napr. pomocou asynchrónnych volaní, AJAX.
+
+Keďže rôzne prehliadače obsahujú rôznu podporu pre JavaScript, je rozumné používať knižnice (samozrejme napísané v JavaScripte), ktoré tieto rozdiely zahľadzujú a prípadne ponúkajú ďalšiu funkcionalitu navyše. Takouto zaujímavou knižnicou je napríklad JQuery.
+
+\newpage
+\section{Základy}
+
+\subsection{Vloženie JavaScript-u do HTML}
+
+JavaScript možno do HTML vložiť buď pripojením externého súboru (zvyčajne s prípo\-nou \textit{.js}) alebo priamim vložením kódu do HTML. Na tento účel slúži v HTML značka \code{script}.
+
+\lstinputlisting[language=HTML,caption=Vloženie JavaScript-u do HTML,label=lst:js_in_html]{./codes/2_1_html_script_element.html}
+
+V kóde \ref{lst:js_in_html} si môžete všimnúť, že keď vkladáme JavaScript ako externý súbor, nechávame obsah značky prázdny.
+
+Vkladanie kódu JavaScript-u priamo do HTML pomocou \code{script} je vhodné iba ak ide o krátke kúsky kódu, napr. nastavenie globálnych premenných a pod. Väčšie kódy je dobré umiestňovať do samostatných súborov, keďže v tomto prípade budú uložené do cache a prehliadač ich nebude musieť znovu sťahovať.
+
+\subsection{Premenné}
+
+Premennú možno chápať ako priestor v pamäti, do ktorého si ukladáme nejakú hodnotu s tým, že počas vykonávania kódu sa táto hodnota môže meniť. V JavaScript-e sa pri vytváraní premennej neuvádza jej typ. To však neznamená, že JavaScrip typy premenných nepozná.
+
+\lstinputlisting[caption=Vytvorenie premennej,label=lst:create_variable1]{./codes/2_2_vytvorenie_premennej.js}
+
+V kóde \ref{lst:create_variable1} je zobrazené, ako sa vytvára v JavaScript-t premenná. Premenná sa vytvára pomocou kľúčového slova \code{var}, za ktorým nasleduje názov premennej a prípadne priradenie hodnoty. Ak hodnota priradená nie je, hodnotou premennej bude \code{undefined}, ako možno vidieť pri premennej \code{meno} z príkladu.
+
+\lstinputlisting[caption=Typy premenných,label=lst:var_types1]{./codes/2_2_typy_premennej.js}
+
+Každá premenná má skrytý typ, ako možno vidieť v ukážke kódu \ref{lst:var_types1}. JavaScript pozná štyri druhy typov a jednu ``nedefinovanú hodnotu``. Pri číselnom type sa nerozlišuje, či ide o celé čislo alebo o čislo s pohyblivou desatinnou čiarkou.
+
+Pozrite sa na premenné \code{zaluby} a \code{rodicia}. Obe premenné sú typu \code{Object}, avšak môžete si všimnúť syntaktický rozdieľ medzi ich zápisom. Premenná \code{zaluby} obsahuje hodnoty, ktoré sú vymenované jedna za druhou. Takýto zápis je v JavaScripte reprezentáciou poľa (kde indexy sú celé čisla a začínajú od nuly).
+
+Premenná \code{rodicia} má hodnoty pomenované názvamy. Tákýto zápis reprezentuje zložený typ, \code{struct} alebo \code{record} z iných programovacích jazykov.
+
+Premenná \code{domaceZviera} má špeciálnu hodnotu \code{null}, jej typ je však tiež \code{Object}. Môžeme ju chápať ako prázdny objekt (ale nie doslova).
+
+JavaScript pozná ešte jeden typ premennej, o tom si ale povieme neskôr.
+
+\subsubsection{Premenná typu Number}
+
+Číselný typ v JavaScripte je vždy 64-bitová reprezentácia s pohyblivou desatinnou čiarkou. Číslo sa dá zapísať rôznymi spôsobmi, ako je to naznačené v príklade \ref{lst:numbers1}.
+
+\lstinputlisting[caption=Rôzne zápisi čísla,label=lst:numbers1]{./codes/2_2_1_numbers1.js}
+
+Všimnite si niektoré zaujímavé možné hodnoty čísla. Napríklad \code{Infinity}, reprezentujúce kladné nekonečno, po znegovaní znakom mínus reprezentuje záporné nekonečno. Špeciálna hodnota \code{NaN} je vhodnou informáciou o tom, že nejaká aritmetická operácia s číslami zlyhala, lebo jeden z operandov nebol číslo. Tak isto môžete pomocou \code{Number.MAX\_VALUE} a \code{Number.MIN\_VALUE} dostať maximálnu a minimálnu možnú hodnotu čísla\footnote{\textbf{Pozor:} táto hodnota nie je totožná s kladným ani záporným nekonečnom.}.
+
+Na príklade \ref{lst:numbers2} môžete vidieť, ako sa dajú previesť iné typy na \code{Number}. Všimnite si, že na riadku 4 sa volanie \code{Number("10 20")} nedokázalo vysporiadať s týmto vstupom, ale na riadkoch 9 a 15 volania \code{parseInt} a \code{parseFloat} rozpoznali prvé čislo v reťazci. Avšak ani funkcie \code{parseInt} a \code{parseFloat} nedokážu rozpoznať všetky vstupy korektne, ako je to ukázané na riadkoch 11 a 17.
+
+Funkcie \code{parseInt} a \code{parseFloat} sa líšia rozpoznávaným druhom čísla, kým prvá funkcia vráti celé číslo, druhá funkcia vráti aj číslo desatinné.
+
+\newpage
+\lstinputlisting[caption=Prevod hodnoty na číselnú,label=lst:numbers2]{./codes/2_2_1_numbers2.js}
+
+\subsubsection{Premenná typu String}
+
+Hodnota typu \code{String} je reťazcom znakov. Môže byť definovaný rôzne, viz. príklad \ref{lst:strings1}.
+
+\lstinputlisting[caption=String-y,label=lst:strings1]{./codes/2_2_2_strings1.js}
+
+\code{String} môže byť definovaný pomocou obyčajných alebo dvojitých úvodzoviek. Tieto môžeme vždy jednoducho kombinovať, teda v obyčajných úvodzovkých môžeme používať dvojité a naopak. Ak chceme použiť vrámci dvojitých úvodzoviek opäť dvojité, treba použiť escape znak \code{\textbackslash}, tak ako je to na riadku 8.
+
+Na riadku 6 si môžete všimnúť, ako sa dá zistiť dĺžka reťazca. \code{String} je v JavaScripte-e objektom a \code{length} je jeho premennou\footnote{Tak ako tomu bolo v príklade \ref{lst:var_types1} na riadku 5.}.
+
+Keďže \code{\textbackslash} je tzv. escape znak, nemôže v reťazci stáť samostatne. Rovnako tak nemôže byť tento znak sám o sebe zobrazený, pretok, ako je tomu na riadku 9, ak chceme zobraziť spätné lomítko, napíšeme ho dvakrát po sebe.
+
+Keďže \code{String} je objekt, obsahuje viacero užitočných metód:
+
+\begin{itemize}
+	\item \code{slice(start, end)}: vráti výsek reťazca, kde \code{start} je začiatočný index a \code{end} je konečný index, pričom platí, že konečný index musí byť väčší alebo rovný ako začiatočný. Indexy môžu byť aj záporné, vtedy sú počítane z prava do ľava. Ak je druhý parameter vynechaný, je chápaný ako posledný index v reťazci.
+	\item \code{substring(start, end)}: robí to isté čo \code{slice}, ale neakceptuje záporné indexy.
+	\item \code{substr(start, length)}: podobne ako \code{slice} vracia výsek reťazca, avšak druhý parameter je dĺžka výseku.
+	\item \code{replace(find,replaceBy)}: nájde v reťazci podreťazec \code{find} a nahradí ho reťazcom \\ \code{replaceBy}.
+	\item \code{toUpperCase()}: zmení všetky znaky v reťazci na veľké písmená.
+	\item \code{toLowerCase()}: zmení všetky znaky v reťazci na malé písmená.
+	\item \code{concat()}: má premenný počet parametrov, \code{String}-ov, ktoré spojí do jedného.
+	\item \code{charAt(index)}: vráti znak na \code{index}e.
+	\item \code{charCodeAt(index)}: vráti kód znaku na \code{index}e.
+	\item \code{split(delimiter)}: vráti pole podreťazcov, ktoré vznikne rozdelením pôvodného reťazca podľa oddelovača \code{delimiter}. Ak je oddelovať prázdny reťazec, \code{""}, vráti pole jednotlivých znakov v reťazci.
+	\item \code{fromCharCode()}: má premenný počet parametrov, všetko unicode hodnoty znakov, vráti reťazec pozostávajúci so znakov s týmito hodnotami.
+	\item \code{indexOf(search,start)}: vráti index prvého výskytu hľadaného podreťazca \code{search}, voliteľný parameter \code{start} udáva index, od ktorého sa má hľadať. Vráti -1, ak sa nič nenájde.
+	\item \code{lastIndexOf(search,start)}: rovnako ako \code{indexOf}, ale hľadá sa z prava do ľava.
+	\item \code{localeCompare(str)}: porovná dva reťazce vzhľadom na súčasnú lokalizáciu. Nech \code{str1} a \code{str2} sú dva reťazce, potom \code{str1.localeCompare(str2)} bude:
+	\begin{itemize}
+		\item -1, ak \code{str1} je zoradený pred \code{str2}.
+		\item 0, ak sú oba reťazce rovnaké.
+		\item 1, ak \code{str1} je zoradený za \code{str2}.
+	\end{itemize}
+	\item \code{match(regexp)}: porovná reťazec s regulárnym výrazom \code{regexp}.
+	\item \code{search(text)}: nájde v reťazci prvý výskyť podreťazca \code{text} a vráti index začiatku, alebo -1 ak sa podreťazec nenájde. Parameter \code{text} môže byť aj regulárny výraz.
+	\item \code{trim()}\footnote{Od JavaScript-u verziu 1.8}: odstráni tzv. biele znaky\footnote{Medzery, tabulátory, znak nového riadku a pod.} zo začiatku a konca reťazca.
+\end{itemize}
+
+\newpage
+\lstinputlisting[caption=Príklady použitia metód reťazcov,label=lst:string_methods1]{./codes/2_2_2_strings_metody1.js}
+
+Príklad kódu \ref{lst:string_methods1} zobrazuje použitie niektorých metód reťazcov (\code{String}). Na riadku 14 si môžete všimnúť, že metóda sa dá použiť aj na anonymný \code{String}. Všetky metódy pracujúce s reťazcami nemodifikujú hodnotu reťazca, na ktorý sú volané, ak majú vrátiť \code{String}, bude vytvorený nový \code{String}. To znamená, že reťazce v JavaScript-e sú tzv. immutable, teda ich hodnota sa po priradení už nemení.
+
+\subsubsection{Premenná typu Object}
+\label{sec:var_type_Object}
+
+Každá zložená štruktúra v JavaScript-e je \code{Object}. Objekty pozostávajú s pomenovaných vlastností\footnote{Párov, meno : hodnota}, ktorých hodnotou môže byť ktorýkoľvek typ, teda opäť aj objekt. Objekty tiež môžu mať metódy, o tých sa ale dozviete neskôr.
+
+V JavaScript-e neexistuje pojem trieda, tak ako v iných jazykoch\footnote{ECMAscript6 zavádza kľúčové slovo class, ale ide iba o syntaktický cukor.}. To však neznamená, že nie je možné definovať štruktúru, z ktorej sa neskôr vytvoria ďalšie inštancie. To ale budeme riešiť neskôr.
+
+\lstinputlisting[caption=Príklad objektu v JavaScript-e,label=lst:object_example]{./codes/2_2_3_object_example.js}
+
+Na príklade kódu \ref{lst:object_example} vidíme, ako vyzerá objekt. Všetko medzi \{ a \} je definícia objektu, pričom si môžete všimnúť páry, meno a hodnota, oddelené dvojbodkou.  Po každom páre, okrem posledného, nasleduje čiarka.
+
+Na riadku 5 je hodnotou páru pole. Pozor, v JavaScripte je pole tiež objektom. Kvôli zjednodušeniu zápisu má inú syntax. Hodnoty poľa sú v {[} a {]}, nie sú tu páry hodnôt. Každá hodnota je automaticky priradená k číslu, indexu, ktorý začína od nuly. Teda "Robot zametač" bude mať v tomto poli index 0.
+
+\subsubsubsection{Objekt Array}
+
+Pole je špeciálny \code{Object}, niektoré jeho užitočné metódy sú:
+
+\begin{itemize}
+	\item \code{join(by)}: vráti pole ako string, pričom všetky položky sú pospájané pomocou reťazca \code{by}.
+	\item \code{pop()}: odoberie z poľa posledný prvok a vráti ho volajúcemu kódu. Vráti \code{undefined} ak je pole prázdne.
+	\item \code{push(value)}: vloží \code{value} na koniec poľa. Predĺži pole.
+	\item \code{shift()}: odoberie z poľa prvý prvok a vráti ho volajúcemu kódu. Vráti \code{undefined} ak je pole prázdne.
+	\item \code{unshift(value)}: vloží \code{value} na začiatok poľa. Predĺži pole.
+	\item \code{splice(pos, cnt, value1 ... valueN)}: od pozície \code{pos} vymaže \code{cnt} prvkov poľa, alebo pridá prvky \code{value1} až \code{valueN}. Predĺži alebo skráti pole.
+	\item \code{sort()}: utriedi pole lexikograficky, tj. triedi reťazce nie čísla.
+	\item \code{reverse()}: vráti pole s prvkami pôvodného v opačnom poradí.
+\end{itemize}
+
+\lstinputlisting[caption=Príklady na prácu s poľom,label=lst:array_examples1]{./codes/2_2_3_1_priklady_na_polia.js}
+
+Príklad kódu \ref{lst:array_examples1} zobrazuje ukážku práce s poľom. Pri poli \code{b} si môžete všimnúť, že triedenie na riadku 11 vytvorí nesprávne usporiadanie\footnote{Všetky čísla sú prekonvertované na reťazce a porovnané ako reťazce lexikograficky.}. Na riadku 12 je do metódy \code{sort} pridaná anonymná funkcia na porovnávanie, vďaka čomu je pole utriedené správne. O anonymných funkciách sa dozviete neskôr.
+
+\subsubsubsection{Objekt Math}
+
+\code{Math} je objekt, ktorý je dostupný v JavaScript-e a poskytuje užitočné metódy pre matematiku. \code{Math} sa nemusí priraďovať k žiadnej premennej, všetky metódy je možné volať ako \code{Math.metóda()}.
+
+\begin{itemize}
+	\item \code{abs(x)}: absolútna hodnota čísla \code{x}.
+	\item \code{acos(x)}: obrátený kosínus čísla \code{x}.
+	\item \code{asin(x)}: obrátený sínus čísla \code{x}.
+	\item \code{atan(x)}: obrátený tangens čísla \code{x}.
+	\item \code{atan2(y, x)}: obrátený tangens, vypočíta uhol od x-ovej osy do bodu $[x,y]$.
+	\item \code{ceil(x)}: horná celá časť čísla (tj. zaokrúhlenie nahor).
+	\item \code{cos(x)}: kosínus čísla \code{x}.
+	\item \code{exp(x)}: hodnota $e^x$, kde $e$ je Eulerovo číslo.
+	\item \code{floor(x)}: dolná celá časť čísla (tj. zaokrúhlenie nadol).
+	\item \code{log(x)}: prirodzený logaritmus čísla \code{x} (tj. $\log_e(x)$).
+	\item \code{max(x,y,z,...,n)}: maximálna hodnota zo vstupných parametrov.
+	\item \code{min(x,y,z,...,n)}: minimálna hodnota zo vstupných parametrov.
+	\item \code{pow(x,y)}: umocnenie \code{x} na \code{y}-tu (tj. $x^y$).
+	\item \code{random()}: náhodné číslo medzi 0 a 1.
+	\item \code{round(x)}: zaokrúhlenie čísla \code{x}.
+	\item \code{sin(x)}: sínus čísla \code{x}.
+	\item \code{sqrt(x)}: druhá odmocnina z čísla \code{x}.
+	\item \code{tan(x)}: tangens čísla \code{x}.
+\end{itemize}
+
+\code{Math} tiež obsahuje niekoľko konštánt:
+
+\begin{itemize}
+	\item \code{Math.E}: Eulerovo číslo.
+	\item \code{Math.PI}: Ludolfovo číslo, $\pi$.
+	\item \code{Math.SQRT2}: druhá odmocnina čísla 2.
+	\item \code{Math.SQRT1\_2}: druhá odmocnina čísla $\frac{1}{2}$.
+	\item \code{Math.LN2}: prirodzený logaritmus čísla 2.
+	\item \code{Math.LN10}: prirodzený logaritmus čísla 10.
+	\item \code{Math.LOG2E}: logaritmus Eulerovho čísla so základom 2.
+	\item \code{Math.LOG10E}: logaritmus Eulerovho čísla so základom 10.
+\end{itemize}
+
+\newpage
+\lstinputlisting[caption=Ukážka niektorých matematických metód,label=lst:math_example1]{./codes/2_2_3_2_priklady_na_math.js}
+
+V príklade \ref{lst:math_example1} si všimnite prvý riadok, ktorý predvádza, ako je možné vygenerovať náhodné čísla ako celé čísla v určitom rozsahu (v tomto prípade od 0 do 10).
+
+\subsection{Funkcie}
+
+Funkcia je pomenovaná časť kódu, ktorú možno spustiť zavolaním. Funkcia môže byť definovaná dvoma spôsobmi, môže alebo nemusí vrátiť hodnotu a môže mať nula, jeden a viacej parametrov.
+
+\lstinputlisting[caption=Jednoduchá funkcia,label=lst:functions1]{./codes/2_3_funkcie1.js}
+
+V príklade \ref{lst:functions1} je zobrazený jeden spôsob zápisu funkcie. Ide o statický zápis. Funkcia \code{dvakrat} je definovaná pomocou kľúčového slova \code{function}. Má jeden vstupný parameter, ktorým je \code{cislo}\footnote{Nepoužíva sa kľúčové slovo \code{var}.}. Funkcia vypočíta dvojnásobok vstupnej hodnoty, ktorý vráti volajúcemu kódu pomocou kľúčového slova \code{return}. Na riadku 5 je tzv. volanie funkcie.
+
+\lstinputlisting[caption=Druhý spôsob vytvorenia funkcie,label=lst:functions2]{./codes/2_3_funkcie2.js}
+
+V ukážke kódu \ref{lst:functions2} si na riadkoch 8 až 10 môžete všimnúť druhý spôsob definovania funkcie. Toto je dynamické vytvorenie funkcie. Na rozdieľ od statického vytvorenia je pri dynamickom vytvorení funkcia priradená k menu až vtedy, keď je vykonaný príslušný riadok kódu. Preto, ak tak ako v príklade na riadku 2, chcete zavolať dynamickú funkciu skôr, ako mohla byť priradená k menu, dôjde k chybe\footnote{Ktorá zapríčiní ukončenie vykonávania celého programu.}.
+
+Pri dynamickom zápise si môžete všimnúť, že funkcia je priradená ako hodnota premennej. Typ premennej je v tomto prípade \code{Function}. Typ \code{Function} je špeciálnym druhom typu \code{Object}, čo znamená, že funkcia\footnote{Zapísaná staticky aj dynamicky.} je v JavaScripte objektom.
+
+\subsubsection{Funkcia s premenným počtom parametrov}
+
+Funkcia môže byť definovaná bez parametrov a aj napriek tomu ju môžeme s parametrami volať. V tele funkcie sa vieme k parametrom dostať pomocou premennej \code{arguments}.
+
+\lstinputlisting[caption=Príklad funkcie s premenným počtom argumentov,label=lst:func_val_arguments1]{./codes/2_3_1_priklad_arguments.js}
+
+Na príklade \ref{lsx:func_val_arguments1} je funkcia \code{multisum} definovaná bez parametrov, ale neskôr je zavolaná s piatimi parametrami. Vnútri funkcie je použitá premenná \code{arguments} v tele cyklu\footnote{O cykloch sa dozvieme neskôr.}, pričom funkcia spočíta hodnotu súčtu všetkých čísiel v parametroch.
+
+\subsubsection{Funkcia, ktorá dostane funkciu na vstupe}
+
+Ako parameter funkcie môžeme dať inú funkciu\footnote{Už sme to mohli vidieť v príklade \ref{lst:array_examples1} na riadku 12.}. Takáto funkcia môže byť buď anodnymná alebo dopredu definovaná.
+
+Pozrite si príklad kódu \ref{lst:func_param_as_func1}. Máme tu funkciu nazvanú \code{filtruj}, ktorá očakáva pole a filtračnú funkciu (vnútri funkcie sa volá \code{filter}). Filtračná funkcia vracia pravdivostnú hodnotu, pričom na vstupe dostáva jeden prvok poľa. Ak je pravdivostná hodnota \code{true}, prvok bude zachovaný v novom poli, ktoré funkcia \code{filtruj} vracia.
+
+Ďalej je v príklade definovaná funkcia \code{filter1}, ktorá kontroluje, či je číslo väčšie ako 5. Všimnite si, že na riadku 18 sa meno tejto funkcie používa bez zátvoriek. Každá, dynamicky aj staticky vytvorená funkcia je premenná, ktorej hodnota je objekt funkcie. Preto môžeme len napísaním mena (napr. funkcie \code{a}) do parametra inej funkcie (napr. funkcie \code{b}) tejto funkcii predať definíciu našej funkcie (\code{a}).
+
+Na riadku 19 je v parametry funkcie \code{filtruj} použitá takzvaná anonymná funkcia. Je to funkcia ako každá iná, s jediným rozdieľom. Táto funkcia je dynamicky vytvorená pri volaní funkcie \code{filtruj} a nie je priradená k žiadnemu menu.
+
+\lstinputlisting[caption=Príklad funkcie{,} ktorá dostane na vstup funkciu,label=lst:func_param_as_func1]{./codes/2_3_2_callback_priklad.js}
+
+\subsubsection{Funkcia, ktorá vráti funkciu}
+
+Výsledkom práce funkcie môže byť iná funkcia. Predpokladajme, že máme funkciu \code{filtruj} z príkladu \ref{lst:func_param_as_func1} a chceme filtračnú funkciu, ktorá by mala aj dodatočnú informáciu, ako napr. hodnotu, s ktorou má porovnávať prvok poľa. Aby sme toho docielili, vytvoríme funkciu, ktorá vygeneruje filtračnú funkciu\footnote{Dynamicky ju vytvorí, pričom použije náš vstupný parameter v jej tele.}.
+
+\lstinputlisting[caption=Príklad funkcie{,} ktorá vráti funkciu,label=lst:func_ret_func_ex1]{./codes/2_3_3_func_return_func.js}
+
+V príklade \ref{lst:func_ret_func_ex1} vidíme funkciu \code{vytvorFilterVacsi}, ktorá dostáva na vstupe v parametri \code{kolko} informáciu o čísle, od ktorého musí byť prvok poľa väčší aby mohol byť zaradený do nového poľa. Táto funkcia pomocou \code{return} vráti anonymnú funkciu\footnote{Anonymná je preto, lebo nemá meno. Keby sa táto funkcia po návrate priradila k premennej, už by nebola anonymná.}, ktorá vo svojom tele používa parameter \code{kolko}, pričom má vlastný parameter \code{v}, ktorý z parametrom \code{kolko} porovnáva. Hodnota \code{kolko} je v tele anonymnej funkcie zapamätaná, takže keď je volaná vrámci funkcie \code{filtruj}, vyzerá to, ako keby tam táto hodnota bola pevne daná pri definícii anonymnej funkcie (ako na riadku 19 v príklade \ref{lst:func_param_as_func1}).
+
+\subsubsection{Funkcia ako metóda objektu}
+
+Objekty, ako bolo povedané v časti \ref{sec:var_type_Object} \nameref{sec:var_type_Object}, môže obsahovať aj vlastné funkcie, zvané metódy. Takáto metóda sa v objekte vytvorí ako dynamická funkcia. Aby bolo možné v tejto funkcii pracovať s hodnotami objektu, používa sa kľúčové slovo \code{this}\footnote{Pozor, \code{this} nie je premenná, táto hodnota sa nedá v tele funkcie meniť.}
+
+\lstinputlisting[caption=Príklad jednoduchej metódy v objekte,label=lst:simple_method_ex1]{./codes/2_3_4_simple_method_example.js}
+
+V príkladovom kóde \ref{lst:simple_method_ex1} máme objekt \code{graf}\footnote{Graf je matematická štruktúra, ktorá pozostáva z množiny vrcholov a množiny hrán, čo sú dvojice navzájom prepojených vrcholov.}, ktorý obsahuje dve metódy, \code{pridajVrchol} a \code{pridajHranu}. Obe metódy používajú kľúčové slovo \code{this}, aby mohli pristupovať k hodnotám prvkov \code{vrcholy} a \code{hrany} v objekte. Volanie metódy objektu je potom jednoduché, \\\code{objekt.metoda(argumenty)}.
+
+Každá funkcia v JavaScript-e môže použiť kľúčové slovo \code{this}. Toto sa bude vsťahovať na objekt, ktorý funkciu vlastní. V prípade objektu \code{graf} je týmto objektom samotný objekt \code{graf}\footnote{Bežne definovaná funkcia má ako vlastníka objekt window, tj. okno prehliadača.}. Keďže každá funkcia je tiež objekt, ma aj funkcia svoje metódy. Dve veľmi užitočné sú \code{.call(vlastnik, parameter1 ... parameterN)} a \code{.apply(vlastnik, poleParametrov)}. Pomocou týchto volaní vieme funkcii priradiť nového vlastníka.
+
+Na príklade \ref{lst:func_call_apply_ex1} môžeme vidieť, ako sa \code{call} a \code{apply} používa. Vytvorili sme dve obyčajné funkcie, v rámci ktorých sme použili kľúčové slovo \code{this}. Keby sme tieto funkcie zavolali bez \code{call} a \code{apply} a nezmenili by sme vlastníka funkcie na objekt, ktorý obsahuje požadované prvky, nastala by chyba\footnote{Pri obyčajnom volaní by \code{this} bolo \code{window}, ktoré neobsahuje \code{hrany} a \code{vrcholy}.}.
+
+Použitím metód funkcie \code{call} (na riadku 16 a 17) a \code{apply} (na riadku 18) sme docielili toho, aby si funkcia ,,myslela``, že jej vlastníkom je \code{graf}. Potom vnútri funkcie hodnota \code{this} je \code{graf} a všetko funguje tak ako potrebujeme, tj. funkcia má prístup k prvkom objektu \code{vrcholy} a \code{hrany}.
+
+Všimnite si, že na riadku 17 a 18 je funkcia \code{stupenVrchola} zavolaná rozdieľne s \code{call} a \code{apply}. Výsledok je rovnaký, jediný rozdiel je v spôsobe volania, kde pri \code{call} jednotlivé parametre funkcie zapisujeme priamo do volania a v prípade \code{apply} tieto parametre posielame ako pole hodnôt.
+
+\lstinputlisting[caption=Použitie \code{call} a \code{apply} metód funkcie,label=lst:func_call_apply_ex1]{./codes/2_3_4_func_method_call_apply.js}
+
+\subsection{Riadenie toku programu}
+
+\subsubsection{Podmienky}
+
+V JavaScript-e sú dva druhy podmienok:
+
+\begin{itemize}
+	\item \code{if} - môže byť použitá na vyhodnotenie komplexného logického výrazu.
+	\item \code{switch} - používa sa na test hodnôt jednej premennej a podľa hodnoty sa vyberá aktuálny prípad (\code{case}).
+\end{itemize}
+
+Ako prvé sa pozrieme na vyhodnocovanie podmenky \code{if}. Malá ukážka je na príklade \ref{lst:simple_if_example}, na riadku 4 je začiatok podmienky \code{if}, vnútri bežných okrúhlych zátvoriek je logický výraz, ktorý sa má vyhodnotiť, v tomto prípade či hodnota premennej \code{meno} je ``Jozef''. Ďalej nasledujú na konci riadku 4 a začiatku riadku 6 zložené zátvorky (brackets - $\lbrace \rbrace$), tie označujú blok kódu, ktorý sa vykonáva, ak bola podmienka v \code{if} splnená. Na riadku 6 je kľúčové slovo \code{else} a začiatok ďalšieho bloku. Tento blok sa bude vykonávať iba ak podmienka \code{if} nebola splnená\footnote{\code{else} blok je nepovinný.}.
+
+\lstinputlisting[caption=Jednoduchá podmienka,label=lst:simple_if_example]{./codes/2_4_1_simple_if.js} 
+
+Po bloku \code{if} a pred blokom \code{else} môže naslovať ľubovolný počet blokov \code{else if}, v ktorých sa tiež pomocou okrúhlych zátvoriek píše podmienka. Bloky \code{if} a \code{else if} sa vyhodnocujú kaskádovo, z vrchu na spod. To znamená, že prvý blok, ktorého podmienka je splnená sa vykoná a žiadne ďalšie bloky sa už nebudú testovať a ani vykonávať. Block \code{else} sa vykoná iba ak sa podmienky blokov \code{if} a ani každého \code{else if} bloku nepodarí splniť\footnote{A pravdaže, ak block \code{else} existuje.}. Ukážka je v príkladovom kóde \ref{lst:more_complex_if_example}.
+
+\lstinputlisting[caption=Trocha zložitejšia podmienka,label=lst:more_complex_if_example]{./codes/2_4_1_more_complex_if.js}
+
+Ďalšou syntaktickou konštrukciou na rozvetvenie toku kódu je \code{switch}. Ide o porovnávanie hodnoty nejakej premennej a rozhodovanie sa podľa prípadov jej hodnoty. Ukážka je v príklade kódu \ref{lst:switch_example}.
+
+\lstinputlisting[caption=Ukážka \code{switch} podmienky,label=lst:switch_example]{./codes/2_4_1_switch_case_example.js}
+
+Ako možno vidieť na riadku 4 je použité kľúčové slovo \code{switch} a v zátvorke je hodnota, ktorú chceme testovať (v tomto prípade dĺžka poľa). Potom v zložených zátvorkách (koniec riadku 4 a začiatok riadku 17) je blok kódu testujúci túto hodnotu pomocou kľúčových slov \code{case}, za ktorým nasleduje požadovaná hodnota a dvojbodka. Po dvojbodke nasleduje kód, ktorý sa má vykonať, ak testovaná premenná má túto hodnotu. Kľúčové slovo \code{break} zastaví vykonávanie kódu a vyskočí za \code{switch} blok, teda v tomto prípade na za riadok 17.
+
+Miesto \code{case} môžeme použiť slovo \code{default}, ktoré neprijíma žiadnu hodnotu ale je nasledované priamo dvojbodkov. Toto znamená zhruba: ak doposial žiaden case nezabral, tak spusti nasledujúci kód. Ak medzi dvoma \code{case} alebo \code{case} a \code{default} vynecháme \code{break}, kód bude pokračovať vo vykonávaní ďalej, bez kontroly hodnoty, po najbližší \code{break} alebo koniec \code{switch} bloku. Ukážka je na príklade kódu \ref{lst:switch_example2}.
+
+\newpage
+\lstinputlisting[caption=Zlúčenie viacerých \code{case},label=lst:switch_example2]{./codes/2_4_1_switch_case_example2.js}
+
+\subsubsubsection{Logické operátory}
+
+Logické operátory môžeme rozdeliť na logické spojky a relačné operátory\footnote{Alebo inak porovnávacie operátory.}. Logické spojky sú také operátory, ktorých operandy sú logické výrazy alebo pravdivostné hodnoty. Relačné operátory sú také, ktoré porovnávajú hodnoty premenných a vracajú pravdivostné hodnoty\footnote{Pravdivostná hodnota je hodnota \code{true} - pravda, alebo \code{false} - nepravda.}.
+
+Logické operátory sú tri:
+
+\begin{itemize}
+	\item \code{\&\&} - logická spojka ``a súčastne'', aplikuje sa na dva operandy. Oba operandy musia byť \code{true} aby bol výsledok \code{true}. Ak je už prvý operand \code{false}, druhý operand sa \textbf{NEBUDE TESTOVAŤ}.
+	\item \code{||} - logická spojka ``alebo'', aplikuje sa na dva operandy. Aspoň jeden operand musí byť \code{true} aby bol výsledok \code{true}. Ak je už prvý operand \code{true}, druhý operand sa \textbf{NEBUDE TESTOVAŤ}.
+	\item \code{!} - logická negácia, aplikuje sa na jeden operand. Ak je operand \code{true}, výsledok bude \code{false} a naopak.
+\end{itemize}
+
+Medzi logickýmy výrazmy je možné používať obyčajné okrúhle zátvorky, ak je treba upresniť priority porovnávania.
+
+Relačné operátory sú:
+
+\begin{itemize}
+	\item \code{==} - porovnanie hodnoty, ak majú výrazy v oboch operandoch rovnakú hodnotu, výsledok je \code{true}, inak je \code{false}.
+	\item \code{===} - porovnanie hodnoty a typu, ak majú výrazy v oboch operandoch rovnakú hodnotu a rovnaký typ, výsledok je \code{true}, inak je \code{false}.
+	\item \code{!=} - porovnanie nerovnosti hodnoty, ak sa hodnoty výrazov oboch operandov nezhodujú, výsledok je \code{true}, inak je \code{false}.
+	\item \code{!==} - porovnanie nerovnosti hodnoty alebo nerovnosti typu, ak sa hodnoty výrazov oboch operandov nezhodujú alebo sa nezhoduje ich typ, výsledok je \code{true}, inak je \code{false}.
+	\item \code{>} - porovnanie ``väčší ako'', ak je hodnota ľavého operandu väčšia ako hodnota pravého operandu, výsledok je \code{true}, inak je \code{false}.
+	\item \code{<} - porovnanie ``menší ako'', ak je hodnota ľavého operandu menšia ako hodnota pravého operandu, výsledok je \code{true}, inak je \code{false}.
+	\item \code{>=} - porovnanie ``väčší ako alebo rovný'', ak je hodnota ľavého operandu väčšia ako hodnota pravého operandu, alebo sa hodnoty rovnajú, výsledok je \code{true}, inak je \code{false}.
+	\item \code{<=} - porovnanie ``menší ako alebo rovný'', ak je hodnota ľavého operandu menšia ako hodnota pravého operandu, alebo sa hodnoty rovnajú, výsledok je \code{true}, inak je \code{false}.
+\end{itemize}
+
+\subsubsubsection{Ternárna podmienka priradenia}
+
+JavaScript podporuje podmienený výraz priraďovania hodnoty premennej. Tento výraz je v tvare \code{premenna = (podmienka) ? hodnota\_ak\_true : hodnota\_ak\_false}. Premennej bude priradená niektorá z dvoch hodnôt na základe pravdivostnej hodnoty výrazu v podmienke. Podmienka môže byť komplikovaný výraz, tj. môžu sa použiť logické spojky. Zátvorky okolo podmienky nie sú nutné, niekedy je dobré ich použiť ak je podmienka príliž komplikovaná. Za znakom otáznika nasleduje hodnota, ktorá sa dosadí\footnote{Alebo kód, ktorý sa vykoná.}, ak je podmienka splnená. Za dvojbodkov je naopak hodnota, ktorá sa dosadí\footnote{Alebo kód, ktorý sa vykoná.}, ak podmienka splnená nie je. Hodnotu v všetky tri časti, tj. podmienka a obe hodnoty sú povinné. Príklad je v kóde \ref{lst:ternary_condition}.
+
+\lstinputlisting[caption=Ukážka ternárnej podmienky priradenia,label=lst:ternary_condition]{./codes/2_4_1_2_ternary_condition.js}
+
+V prípade potreby je možné ternárnu podmienku používať viacnásobne, to znamená, že jednou z \code{hodnota\_ak\_true} alebo \code{hodnota\_ak\_false} môže byť opäť ternárna podmienka a toto môže rekurentne pokračovať ďalej. V tomto prípade treba celú ternárnu podmienku vložiť do obyčajných okrúhlych zátvoriek.
+
+\subsubsection{Cykly}
+
+Cyklus je opakované vykonávanie bloku kódu, buď limitované nejakou podmienkou ukončenia alebo opakujúci sa do nekonečna (čo je väčšinou neželaný stav). V JavaScript-e máme niekoľko zápisov cyklov.
+
+%\todo{Na čo sú cykly a aké sú cykly.}
+
+\subsubsubsection{Cyklus for}
+
+Cyklus \code{for} má v JavaScript-e dva možné zápisy:
+
+\lstinputlisting[caption=Prvý možný zápis cyklu \code{for},label=lst:for_loop_example_1]{./codes/2_4_2_1_for_loop_example_1.js}
+
+Na riadku 1 v príklade \ref{lst:for_loop_example_1} vidíme ukážku zápisu cyklu, kde:
+
+\begin{itemize}
+	\item \lstinline$var premenna = zaciatocnaHodnota$ - premenná, ktorej hodnotu počas vykonávania cyklu meníme, ak neexistuje, môžeme použiť kľúčové slovo \code{var} na jej definovanie, premennej určíme východziu hodnotu na začiatku cyklu,
+	\item \lstinline$podmienkaBehuCyklu$ - dosadí sa podmienka, ktorá musí byť splnená, aby sa mohlo vykonať telo cyklu, platnosť podmienky sa kontroluje pred každým vykonaním tela cyklu,
+	\item \lstinline$zmenaHodnotyPremennej$ - táto časť upravuje hodnotu premennej, ktorú v cykle používame.
+\end{itemize}
+
+Ak by sme maly premennú \code{i} so začiatočnou hodnotou 0, pole \code{p}, podmienku behu cyklu by sme mali \code{i < p.length} a zmena hodnoty premennej by bola \code{i++}, cyklus zopakuje svoje telo presne tolko ráz, kolko je v poli prvkov. Príklad na riadku 6 podobne zopakuje cyklus iba dokial je hodnota \code{i} menšia ako 10 (spolu 10 zopakovaní cyklu).
+
+Druhá možnosť zápisu cyklu \code{for} je:
+
+\lstinputlisting[caption=Druhý možný zápis cyklu \code{for},label=lst:for_loop_example_2]{./codes/2_4_2_1_for_loop_example_2.js}
+
+Tento zápis dosadzuje do premennej kľúče poľa alebo názvy premenných v objekte (podľa toho, či chcete prechádzať poľom alebo objektom). Použitím syntaxe na prístup k prvku poľa\footnote{Rovnaká syntax sa používa aj pri prechode objektom. Tj. \code{objekt[nazovPremennej]}} sa dostaneme k príslušnej hodnote.
+
+Na riadku 7 v príklade \ref{lst:for_loop_example_2} vidíme prechádzanie cez prvky poľa \code{p}, pričom kľúče\footnote{Niekedy ich voláme aj indexy poľa.} sa ukladajú do premennej \code{i}.
+
+%\todo{Niečo k cyklu for v oboch alternatívach.}
+
+\subsubsubsection{Cyklus while}
+
+\todo{Niečo k cyklu while, možno podobnosť s cyklom for.}
+
+\subsubsubsection{Cyklus do while}
+
+\todo{Niečo k cyklu do while a na čo je to dobré.}
+
+\subsection{Operátory všeobecne}
+
+\todo{Väčší zoznam operátorov, aserčné, logické, relačné, atd. + priority}
+
+\todo{Až bude ostatné hotové, začať písať niečo o JQuery}
+
+\todo{Prípadne by možno nebolo od veci ako appendix pridať nejaký html a css cheat sheet.}
+
+\end{comment}
+
+\end{document}

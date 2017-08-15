@@ -1,0 +1,25 @@
+\chapter{Prostredie a premenné}
+
+Každý účastník si spustí Unity a vytvorí nový projekt. Projekt pomenujte \textbf{Projekt1}.
+
+Vyrvorte adresár \code{Assets/Scenes} a uložte doňho súčasnú nepomenovanú scénu ako \code{Main.unity}. Pozn. podľa operačného systému sa automaticky každému zvolí najvhodnejšie grafické API, môžu s tým nastať mierne komplikácie, preto na to pamätať alebo každému odporučiť zmeniť grafické API na OpenGL Core. (Edit -> Project Settings -> Player -> Other Settings -> Rendering, vypnúť automatické pridelenie grafického API a zvoliť so zoznamu, engine vyberá zhora nadol prvé, ktoré môže použiť.)
+
+Ukážte účastníkom, čo je kamera, jej nastavenia. Zmente \code{Clear Flags} na  \code{Solid Color} a \code{Background} na \code{314D79FF}. Môžete spomenúť rozdieľ medzi perspektívou a ortografickým premietaním (\code{Projection} nastavenie), to môže byť však ukázané neskôr. Tak isto je vhodné teraz ukázať, ako sa pohybuje s objektom (klávesa W), rotuje objekt (klávesa E) a škáluje objekt (klávesa R).
+
+V tomto cvičení sa budeme zaoberať iba GUI. Vložte do scény UI element Text. Oddialte kameru scény a účastníkom ukážte čo je Canvas a kde vidia Text objekt. Zmente polohu textu na 0, 0, 0 a nastavte ukotvenie na stred. Ukážte účastníkom ako sa spustí hra, mali by vidieť čierny text na modrom pozadí v strede obrazovky.
+
+Označte text a zmeňte mu rozmery na 640 x 60. Zmente hodnotu textu napríklad na ,,Ahoj hráč!'' a zmente veľkosť fontu tak, aby bolo text dobre vidieť. Napríklad 36 bodov. Môžete ukázať zarovnanie textu (nakoniec ho zarovnajte na stred horizontálne aj vertikálne). Zmente farbu na \code{FFFFFFFF}.
+
+Ideme programovať! Všetci si vytvoria adresár \code{Assets/Scripts} a v ňom vytvoria C\# skript \code{MojText}. Pridajte komponent s týmto skriptom do existujúceho Textového UI elementu. Otvorte skript a vysvetlite, kedy sa volá \code{Start} a kedy \code{Update}. Do \code{Start} napíšeme jeden riadok, ktorý zmení text na ,,Ahoj -meno účastníka-'' \refCode{lst:MojText1}.
+
+\clearpage
+\lstinputlisting[language=CSharp,caption=Prvý skript.,label=lst:MojText1]{./codes/premenne_a_prostredie/MojText_1.cs}
+
+Lepšie by bolo ale mať meno ako parameter v skripte, preto prídáme prvú premennú \code{public string meno;} do skriptu a ukážeme účastníkom, že sa teraz nachádza v komponente skriptu v objekte Text. Následne \code{meno} použijeme v texte \refCode{lst:MojText2}.
+
+\lstinputlisting[language=CSharp,caption=Prvá premenná.,label=lst:MojText2]{./codes/premenne_a_prostredie/MojText_2.cs}
+
+Ukážeme si ešte \code{float} a \code{int}. Pridáme \code{public float vyska;} a \code{public int vek;}. Potom urpavíme vypisovaný text s vekom a výškou \refCode{lst:MojText3}.
+
+\clearpage
+\lstinputlisting[language=CSharp,caption=Viacero premenných.,label=lst:MojText3]{./codes/premenne_a_prostredie/MojText_3.cs}

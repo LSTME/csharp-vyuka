@@ -1,0 +1,8 @@
+__poznamky/*.aux
+__poznamky/*.bbl
+__poznamky/*.blg
+__poznamky/*.log
+__poznamky/*.out
+__poznamky/*.synctex.gz
+__poznamky/*.tdo
+__poznamky/*.toc
